@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
 import { UrlSegment } from "@angular/router";
 import { Authentication } from "src/app/models/authentication";
 import { tap } from "rxjs/operators";
@@ -12,8 +12,8 @@ export class AuthenticationService {
   private tokenStoreKey = "access_token";
   private tokenStoreExpiration = "access_token_expiration";
   private authServer = "http://localhost:8080/";
-  private clientId = "user-manager-ui";
-  private clientSecret = "user-manager-ui-secret";
+  private clientId = "auth-server";
+  private clientSecret = "auth-server-secret";
   constructor(private http: HttpClient) {}
 
   authenticationApp() {
@@ -30,15 +30,16 @@ export class AuthenticationService {
     redirect_uri: string
   ): Observable<Authentication> {
     const tokenUrl = `${this.authServer}oauth/token`;
-    const params = new HttpParams();
-    params
+    const params = new HttpParams()
       .set("grant_type", "authorization_code")
       .set("code", code)
       .set("redirect_uri", redirect_uri)
       .set("client_id", this.clientId)
       .set("client_secret", this.clientSecret);
+    const headers = new HttpHeaders()
+      .set('Access-Control-Allow-Origin', `${window.location.origin}/`);
     return this.http
-      .post<Authentication>(tokenUrl, null, { params })
+      .post<Authentication>(tokenUrl, null, { params, headers })
       .pipe(
         tap(auth => {
           localStorage.setItem(this.tokenStoreKey, JSON.stringify(auth));

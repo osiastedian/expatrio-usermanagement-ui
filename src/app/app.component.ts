@@ -12,6 +12,7 @@ import { Authentication } from "./models/authentication";
 })
 export class AppComponent implements OnInit {
   title = "usermanager";
+  authentication: Observable<Authentication>;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -31,7 +32,7 @@ export class AppComponent implements OnInit {
       if (code) {
         authTokenObs = this.authenticationService.fetchAccessToken(
           code,
-          window.location.href
+          `${window.location.origin}/`
         );
       } else {
         this.authenticationService.authenticationApp();
@@ -39,8 +40,6 @@ export class AppComponent implements OnInit {
     } else {
       authTokenObs = of(this.authenticationService.getTokenInStorage());
     }
-    authTokenObs.subscribe(auth => {
-      console.log("Authenticated!", auth);
-    });
+    this.authentication = authTokenObs;
   }
 }
