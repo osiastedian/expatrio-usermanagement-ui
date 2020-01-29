@@ -3,6 +3,8 @@ import { AuthenticationService } from "src/app/core/services/authentication.serv
 import { Authentication } from "src/app/models/authentication";
 import { Observable, EMPTY, of } from "rxjs";
 import { Router } from "@angular/router";
+import { UserService } from "src/app/apis/user.service";
+import { pluck, catchError } from "rxjs/operators";
 
 @Component({
   selector: "app-header",
@@ -14,12 +16,15 @@ export class HeaderComponent implements OnInit {
 
   isAuthenticated = false;
 
+  currentUserFirstName: Observable<string>;
+
   @Output()
   authenticatedChange = new EventEmitter(true);
 
   constructor(
     private authService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -33,6 +38,10 @@ export class HeaderComponent implements OnInit {
       this.isAuthenticated = true;
     }
     this.authenticatedChange.emit(this.isAuthenticated);
+    this.currentUserFirstName = this.userService.getUserInfo().pipe(
+      pluck("firstName"),
+      catchError(() => of(""))
+    );
   }
 
   private checkIfHasCode() {
@@ -54,5 +63,10 @@ export class HeaderComponent implements OnInit {
     this.authService.authenticationApp(`${window.location.origin}/`);
   }
 
-  logout() {}
+  logout() {
+    this.authService.logout().subscribe(data => {
+      console.log("Successfully Logged Out", data);
+      this.checkAuthentication();
+    });
+  }
 }

@@ -3,8 +3,8 @@ import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
 import { UrlSegment } from "@angular/router";
 import { Authentication } from "src/app/models/authentication";
 import { tap } from "rxjs/operators";
-import { Observable } from "rxjs";
-import { SKIP_AUTH_HEADER } from '../constants';
+import { Observable, of } from "rxjs";
+import { SKIP_AUTH_HEADER } from "../constants";
 
 @Injectable({
   providedIn: "root"
@@ -12,7 +12,7 @@ import { SKIP_AUTH_HEADER } from '../constants';
 export class AuthenticationService {
   private tokenStoreKey = "access_token";
   private tokenStoreExpiration = "access_token_expiration";
-  private authServer = "http://localhost:8080/";
+  private authServer = "http://localhost:8080";
   private clientId = "auth-server";
   private clientSecret = "auth-server-secret";
   constructor(private http: HttpClient) {}
@@ -21,15 +21,25 @@ export class AuthenticationService {
     const grant_type = "authorization_code";
     const response_type = "code";
     const clientId = this.clientId;
-    const authUrl = `${this.authServer}oauth/authorize?grant_type=${grant_type}&response_type=${response_type}&client_id=${clientId}&redirect_uri=${redirect_uri}`;
+    const authUrl = `${this.authServer}/oauth/authorize?grant_type=${grant_type}&response_type=${response_type}&client_id=${clientId}&redirect_uri=${redirect_uri}`;
     window.location.href = authUrl;
+  }
+
+  logout() {
+    const logoutObs = of(true).pipe(
+      tap(() => {
+        localStorage.removeItem(this.tokenStoreKey);
+        localStorage.removeItem(this.tokenStoreExpiration);
+      })
+    );
+    return logoutObs;
   }
 
   fetchAccessToken(
     code: string,
     redirect_uri: string
   ): Observable<Authentication> {
-    const tokenUrl = `${this.authServer}oauth/token`;
+    const tokenUrl = `${this.authServer}/oauth/token`;
     const params = new HttpParams()
       .set("grant_type", "authorization_code")
       .set("code", code)
@@ -37,9 +47,9 @@ export class AuthenticationService {
       .set("client_id", this.clientId)
       .set("client_secret", this.clientSecret);
     const headers = new HttpHeaders()
-      .set('Access-Control-Allow-Origin', `${window.location.origin}/`)
-      .set(SKIP_AUTH_HEADER, 'true');
-      
+      .set("Access-Control-Allow-Origin", `${window.location.origin}/`)
+      .set(SKIP_AUTH_HEADER, "true");
+
     return this.http
       .post<Authentication>(tokenUrl, null, { params, headers })
       .pipe(

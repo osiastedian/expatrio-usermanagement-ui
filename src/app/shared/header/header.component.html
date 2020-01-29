@@ -1,5 +1,5 @@
 <!-- Image and text -->
-<nav class="navbar navbar-dark bg-light">
+<nav class="navbar navbar-light bg-light">
   <a class="navbar-brand" [routerLink]="['/']">
     <img
       src="https://www.expatrio.com/themes/expatrio/logo.svg"
@@ -9,14 +9,21 @@
     />
   </a>
   <span class="navbar-text" *ngIf="isAuthenticated">
-    Welcome Ted!
+    Welcome {{ currentUserFirstName | async }}!
   </span>
 
-  <button class="btn btn-outline-info my-2 my-sm-0" (click)="logout()" *ngIf="isAuthenticated">
+  <button
+    class="btn btn-outline-info my-2 my-sm-0"
+    (click)="logout()"
+    *ngIf="isAuthenticated"
+  >
     Logout
   </button>
-  <button class="btn btn-outline-info my-2 my-sm-0" (click)="login()" *ngIf="!isAuthenticated">
+  <button
+    class="btn btn-outline-info my-2 my-sm-0"
+    (click)="login()"
+    *ngIf="!isAuthenticated"
+  >
     Login
   </button>
-
 </nav>
