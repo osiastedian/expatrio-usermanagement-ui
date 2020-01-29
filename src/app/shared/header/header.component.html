@@ -1,0 +1,24 @@
+<!-- Image and text -->
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">
+    <!-- <img
+      src="/docs/4.1/assets/brand/bootstrap-solid.svg"
+      width="30"
+      height="30"
+      class="d-inline-block align-top"
+      alt=""
+    /> -->
+    Expatrio
+  </a>
+  <span class="navbar-text" *ngIf="isAuthenticated">
+    Welcome Ted!
+  </span>
+
+  <button class="btn btn-outline-info my-2 my-sm-0" (click)="logout()" *ngIf="isAuthenticated">
+    Logout
+  </button>
+  <button class="btn btn-outline-info my-2 my-sm-0" (click)="login()" *ngIf="!isAuthenticated">
+    Login
+  </button>
+
+</nav>

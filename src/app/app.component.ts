@@ -11,35 +11,17 @@ import { Authentication } from "./models/authentication";
   styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements OnInit {
-  title = "usermanager";
-  authentication: Observable<Authentication>;
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private authenticationService: AuthenticationService
-  ) {}
+  private title = "Expatrio | User Manager";
 
-  ngOnInit(): void {
-    this.authenticate();
+  isAuthenticated = false;
+
+  constructor() {}
+
+  ngOnInit() {
+    document.title = this.title;
   }
 
-  private authenticate() {
-    const regex = /code=(\w+)/g;
-    const results = regex.exec(window.location.href);
-    const code = results ? results[1] : null;
-    let authTokenObs: Observable<Authentication> = EMPTY;
-    if (!this.authenticationService.hasToken()) {
-      if (code) {
-        authTokenObs = this.authenticationService.fetchAccessToken(
-          code,
-          `${window.location.origin}/`
-        );
-      } else {
-        this.authenticationService.authenticationApp();
-      }
-    } else {
-      authTokenObs = of(this.authenticationService.getTokenInStorage());
-    }
-    this.authentication = authTokenObs;
+  authenticatedChange(isAuthenticated: boolean) {
+    this.isAuthenticated = isAuthenticated;
   }
 }

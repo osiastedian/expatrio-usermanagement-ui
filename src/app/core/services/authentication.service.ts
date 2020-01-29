@@ -4,6 +4,7 @@ import { UrlSegment } from "@angular/router";
 import { Authentication } from "src/app/models/authentication";
 import { tap } from "rxjs/operators";
 import { Observable } from "rxjs";
+import { SKIP_AUTH_HEADER } from '../constants';
 
 @Injectable({
   providedIn: "root"
@@ -16,11 +17,10 @@ export class AuthenticationService {
   private clientSecret = "auth-server-secret";
   constructor(private http: HttpClient) {}
 
-  authenticationApp() {
+  authenticationApp(redirect_uri: string) {
     const grant_type = "authorization_code";
     const response_type = "code";
     const clientId = this.clientId;
-    const redirect_uri = window.location.href;
     const authUrl = `${this.authServer}oauth/authorize?grant_type=${grant_type}&response_type=${response_type}&client_id=${clientId}&redirect_uri=${redirect_uri}`;
     window.location.href = authUrl;
   }
@@ -37,7 +37,9 @@ export class AuthenticationService {
       .set("client_id", this.clientId)
       .set("client_secret", this.clientSecret);
     const headers = new HttpHeaders()
-      .set('Access-Control-Allow-Origin', `${window.location.origin}/`);
+      .set('Access-Control-Allow-Origin', `${window.location.origin}/`)
+      .set(SKIP_AUTH_HEADER, 'true');
+      
     return this.http
       .post<Authentication>(tokenUrl, null, { params, headers })
       .pipe(
