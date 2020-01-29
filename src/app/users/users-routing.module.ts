@@ -6,11 +6,8 @@ import { UsersComponent } from './users.component';
 const routes: Route[] = [
   {
     path: '',
-    component: UsersComponent
-  },
-  {
-    path: '**',
-    redirectTo: ''
+    component: UsersComponent,
+    pathMatch: 'full'
   }
 ];
 

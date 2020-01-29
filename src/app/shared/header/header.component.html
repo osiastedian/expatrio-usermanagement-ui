@@ -1,14 +1,12 @@
 <!-- Image and text -->
-<nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">
-    <!-- <img
-      src="/docs/4.1/assets/brand/bootstrap-solid.svg"
-      width="30"
+<nav class="navbar navbar-dark bg-light">
+  <a class="navbar-brand" [routerLink]="['/']">
+    <img
+      src="https://www.expatrio.com/themes/expatrio/logo.svg"
       height="30"
       class="d-inline-block align-top"
       alt=""
-    /> -->
-    Expatrio
+    />
   </a>
   <span class="navbar-text" *ngIf="isAuthenticated">
     Welcome Ted!
