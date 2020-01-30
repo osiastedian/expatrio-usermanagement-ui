@@ -4,7 +4,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { UserFormModalComponent } from '../user-form-modal/user-form-modal.component';
 import { Store, select } from '@ngrx/store';
 import { AppState } from 'src/app/reducers';
-import { LoadPage, DeleteUser } from 'src/app/actions/users.action';
+import { LoadPage, DeleteUser, EditUser } from 'src/app/actions/users.action';
 import { Observable } from 'rxjs';
 import { UsersSelectors } from 'src/app/selectors/users.selector';
 
@@ -43,8 +43,14 @@ export class UsersListComponent implements OnInit {
   editUser(user: User) {
     const modalRef = this.modalService.show(UserFormModalComponent);
     const content: UserFormModalComponent = modalRef.content;
-    content.user = user;
-    this.modalService.onHidden.subscribe(data => {});
+    content.user = { ...user };
+    content.closeBtnName = 'Save';
+    content.title = 'Update User';
+    content.isNew = false;
+    this.modalService.onHidden.subscribe(data => {
+      const updateUser = content.user;
+      this.store.dispatch(new EditUser({ user: updateUser }));
+    });
   }
 
   deleteUser(userId: string) {

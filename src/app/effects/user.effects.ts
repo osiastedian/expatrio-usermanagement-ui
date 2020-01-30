@@ -7,7 +7,8 @@ import {
   LoadPage,
   SetUserPage,
   AddUser,
-  DeleteUser
+  DeleteUser,
+  EditUser
 } from '../actions/users.action';
 import {
   switchMap,
@@ -61,6 +62,34 @@ export class UserEffects {
     ),
     catchError((error: HttpErrorResponse) => {
       this.toastr.error(error.error['message'], 'Add User');
+      return EMPTY;
+    })
+  );
+
+  @Effect()
+  editUserEffect: Observable<Action> = this.action$.pipe(
+    ofType(UserActionType.EditUser),
+    switchMap((action: EditUser) => {
+      return this.userService.updateUser(action.payload.user);
+    }),
+    tap(user => {
+      this.toastr.success(
+        `Successfully updated user ${user.firstName}`,
+        'Edit User'
+      );
+    }),
+    concatMapTo(this.store.pipe(select(this.selectors.page))),
+    map(
+      pageNumber =>
+        new LoadPage({
+          page: {
+            pageNumber,
+            pageSize: 10
+          }
+        })
+    ),
+    catchError((error: HttpErrorResponse) => {
+      this.toastr.error(error.error['message'], 'Update User');
       return EMPTY;
     })
   );

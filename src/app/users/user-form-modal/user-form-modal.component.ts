@@ -8,10 +8,11 @@ import { User } from 'src/app/models';
   styleUrls: ['./user-form-modal.component.scss']
 })
 export class UserFormModalComponent implements OnInit {
+  isNew = true;
   title = 'Create User';
   closeBtnName = 'Create';
   showPassword = false;
-
+  success = false;
   user: User;
 
   constructor(public modalRef: BsModalRef) {}
@@ -32,7 +33,8 @@ export class UserFormModalComponent implements OnInit {
     };
   }
 
-  createUser() {
+  save() {
+    this.success = true;
     this.modalRef.hide();
   }
 }
