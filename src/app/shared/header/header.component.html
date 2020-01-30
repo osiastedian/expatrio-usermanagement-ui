@@ -8,21 +8,21 @@
       alt=""
     />
   </a>
-  <span class="navbar-text" *ngIf="isAuthenticated">
+  <span class="navbar-text" *ngIf="isAuthenticated | async">
     Welcome {{ currentUserFirstName | async }}!
   </span>
 
   <button
     class="btn btn-outline-info my-2 my-sm-0"
     (click)="logout()"
-    *ngIf="isAuthenticated"
+    *ngIf="isAuthenticated | async"
   >
     Logout
   </button>
   <button
     class="btn btn-outline-info my-2 my-sm-0"
     (click)="login()"
-    *ngIf="!isAuthenticated"
+    *ngIf="!(isAuthenticated | async)"
   >
     Login
   </button>

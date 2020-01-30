@@ -4,7 +4,16 @@ import { Authentication } from "src/app/models/authentication";
 import { Observable, EMPTY, of } from "rxjs";
 import { Router } from "@angular/router";
 import { UserService } from "src/app/apis/user.service";
-import { pluck, catchError } from "rxjs/operators";
+import { pluck, catchError, map } from "rxjs/operators";
+import { Store, select } from "@ngrx/store";
+import { AppState } from "src/app/reducers";
+import {
+  Login,
+  FetchAccessToken,
+  CheckAuthentication,
+  Logout
+} from "src/app/actions/authentication.actions";
+import { AuthenticationSelectors } from "src/app/selectors/authentication.selector";
 
 @Component({
   selector: "app-header",
@@ -14,7 +23,7 @@ import { pluck, catchError } from "rxjs/operators";
 export class HeaderComponent implements OnInit {
   name = "";
 
-  isAuthenticated = false;
+  isAuthenticated: Observable<boolean>;
 
   currentUserFirstName: Observable<string>;
 
@@ -23,50 +32,29 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
-    private router: Router,
-    private userService: UserService
+    private authSelectors: AuthenticationSelectors,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit() {
-    this.checkAuthentication();
-    this.checkIfHasCode();
-  }
-
-  private checkAuthentication() {
-    this.isAuthenticated = false;
-    if (this.authService.hasToken()) {
-      this.isAuthenticated = true;
-    }
-    this.authenticatedChange.emit(this.isAuthenticated);
-    this.currentUserFirstName = this.userService.getUserInfo().pipe(
-      pluck("firstName"),
-      catchError(() => of(""))
+    this.currentUserFirstName = this.store.pipe(
+      select(this.authSelectors.currentUser),
+      map(user => (user ? user.firstName : ""))
     );
-  }
-
-  private checkIfHasCode() {
-    const regex = /code=(\w+)/g;
-    const results = regex.exec(window.location.href);
-    const code = results ? results[1] : null;
-    if (!code) {
-      return;
-    }
-    this.authService
-      .fetchAccessToken(code, `${window.location.origin}/`)
-      .subscribe(() => {
-        this.checkAuthentication();
-        this.router.navigateByUrl("/");
-      });
+    this.isAuthenticated = this.store.pipe(
+      select(this.authSelectors.isLoggedIn)
+    );
+    this.store.dispatch(new CheckAuthentication());
+    this.store.dispatch(new FetchAccessToken());
   }
 
   login() {
-    this.authService.authenticationApp(`${window.location.origin}/`);
+    this.store.dispatch(
+      new Login({ redirect_uri: `${window.location.origin}/` })
+    );
   }
 
   logout() {
-    this.authService.logout().subscribe(data => {
-      console.log("Successfully Logged Out", data);
-      this.checkAuthentication();
-    });
+    this.store.dispatch(new Logout());
   }
 }

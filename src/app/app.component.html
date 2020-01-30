@@ -1,2 +1,2 @@
-<app-header (authenticatedChange)="authenticatedChange($event)"></app-header>
-<router-outlet *ngIf="isAuthenticated"></router-outlet>
+<app-header></app-header>
+<router-outlet *ngIf="isAuthenticated | async"></router-outlet>
