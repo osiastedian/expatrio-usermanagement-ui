@@ -1,25 +1,24 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
-import { UrlSegment } from "@angular/router";
-import { Authentication } from "src/app/models/authentication";
-import { tap } from "rxjs/operators";
-import { Observable, of } from "rxjs";
-import { SKIP_AUTH_HEADER } from "../constants";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { Authentication } from 'src/app/models/authentication';
+import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { SKIP_AUTH_HEADER } from '../constants';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class AuthenticationService {
-  private tokenStoreKey = "access_token";
-  private tokenStoreExpiration = "access_token_expiration";
-  private authServer = "http://localhost:8080";
-  private clientId = "auth-server";
-  private clientSecret = "auth-server-secret";
+  private tokenStoreKey = 'access_token';
+  private tokenStoreExpiration = 'access_token_expiration';
+  private authServer = 'http://localhost:8080';
+  private clientId = 'auth-server';
+  private clientSecret = 'auth-server-secret';
   constructor(private http: HttpClient) {}
 
   authenticationApp(redirect_uri: string) {
-    const grant_type = "authorization_code";
-    const response_type = "code";
+    const grant_type = 'authorization_code';
+    const response_type = 'code';
     const clientId = this.clientId;
     const authUrl = `${this.authServer}/oauth/authorize?grant_type=${grant_type}&response_type=${response_type}&client_id=${clientId}&redirect_uri=${redirect_uri}`;
     window.location.href = authUrl;
@@ -41,14 +40,14 @@ export class AuthenticationService {
   ): Observable<Authentication> {
     const tokenUrl = `${this.authServer}/oauth/token`;
     const params = new HttpParams()
-      .set("grant_type", "authorization_code")
-      .set("code", code)
-      .set("redirect_uri", redirect_uri)
-      .set("client_id", this.clientId)
-      .set("client_secret", this.clientSecret);
+      .set('grant_type', 'authorization_code')
+      .set('code', code)
+      .set('redirect_uri', redirect_uri)
+      .set('client_id', this.clientId)
+      .set('client_secret', this.clientSecret);
     const headers = new HttpHeaders()
-      .set("Access-Control-Allow-Origin", `${window.location.origin}/`)
-      .set(SKIP_AUTH_HEADER, "true");
+      .set('Access-Control-Allow-Origin', `${window.location.origin}/`)
+      .set(SKIP_AUTH_HEADER, 'true');
 
     return this.http
       .post<Authentication>(tokenUrl, null, { params, headers })

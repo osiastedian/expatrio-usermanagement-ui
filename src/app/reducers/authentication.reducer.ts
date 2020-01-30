@@ -4,8 +4,8 @@ import {
   SetIsLoggedIn,
   SetCurrentUser,
   SetAuthentication
-} from "../actions/authentication.actions";
-import { Authentication, User } from "../models";
+} from '../actions/authentication.actions';
+import { Authentication, User } from '../models';
 
 export interface AuthenticationState {
   isLoggedIn: boolean;

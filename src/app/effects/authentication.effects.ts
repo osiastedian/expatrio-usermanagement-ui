@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import { Observable, EMPTY, of } from "rxjs";
-import { Action } from "@ngrx/store";
-import { Actions, Effect, ofType } from "@ngrx/effects";
+import { Injectable } from '@angular/core';
+import { Observable, EMPTY, of } from 'rxjs';
+import { Action } from '@ngrx/store';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import {
   AuthenticationActionTypes,
   Login,
@@ -11,11 +11,11 @@ import {
   CheckAuthentication,
   SetCurrentUser,
   SetAuthentication
-} from "../actions/authentication.actions";
-import { AuthenticationService } from "../core/services/authentication.service";
-import { tap, switchMap, map } from "rxjs/operators";
-import { Router } from "@angular/router";
-import { UserService } from "../apis/user.service";
+} from '../actions/authentication.actions';
+import { AuthenticationService } from '../core/services/authentication.service';
+import { tap, switchMap, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { UserService } from '../apis/user.service';
 
 @Injectable()
 export class AuthenticationEffects {
@@ -58,7 +58,7 @@ export class AuthenticationEffects {
         .fetchAccessToken(code, `${window.location.origin}/`)
         .pipe(
           switchMap(authentication => {
-            this.router.navigateByUrl("/");
+            this.router.navigateByUrl('/');
             return of(
               new SetAuthentication({ authentication }),
               new CheckAuthentication()

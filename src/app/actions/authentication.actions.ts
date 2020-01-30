@@ -1,16 +1,16 @@
-import { Action } from "@ngrx/store";
-import { Authentication, User } from "../models";
+import { Action } from '@ngrx/store';
+import { Authentication, User } from '../models';
 
 export const enum AuthenticationActionTypes {
-  Login = "[Authentication] Login",
-  Logout = "[Authentication] Logout",
-  CheckAuthentication = "[Authentication] CheckAuthentication",
-  SetAuthentication = "[Authentication] SetAuthentication",
-  CheckCode = "[Authentication] CheckCode",
-  SetIsLoggedIn = "[Authentication] SetIsLoggedIn",
-  FetchAccessToken = "[Authentication] FetchAccessToken",
-  FetchCurrentUser = "[Authentication] FetchCurrentUser",
-  SetCurrentUser = "[Authentication] SetCurrentUser"
+  Login = '[Authentication] Login',
+  Logout = '[Authentication] Logout',
+  CheckAuthentication = '[Authentication] CheckAuthentication',
+  SetAuthentication = '[Authentication] SetAuthentication',
+  CheckCode = '[Authentication] CheckCode',
+  SetIsLoggedIn = '[Authentication] SetIsLoggedIn',
+  FetchAccessToken = '[Authentication] FetchAccessToken',
+  FetchCurrentUser = '[Authentication] FetchCurrentUser',
+  SetCurrentUser = '[Authentication] SetCurrentUser'
 }
 
 export class Login implements Action {

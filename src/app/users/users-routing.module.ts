@@ -1,6 +1,6 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { RouterModule, Route } from "@angular/router";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Route } from '@angular/router';
 import { UsersComponent } from './users.component';
 
 const routes: Route[] = [

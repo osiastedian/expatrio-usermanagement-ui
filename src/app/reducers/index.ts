@@ -4,12 +4,12 @@ import {
   createFeatureSelector,
   createSelector,
   MetaReducer
-} from "@ngrx/store";
-import { environment } from "../../environments/environment";
+} from '@ngrx/store';
+import { environment } from '../../environments/environment';
 import {
   AuthenticationState,
   AuthenticationReducer
-} from "./authentication.reducer";
+} from './authentication.reducer';
 
 export interface AppState {
   authentication: AuthenticationState;
