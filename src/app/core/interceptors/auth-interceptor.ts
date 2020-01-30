@@ -18,7 +18,12 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     if (req.headers.has(SKIP_AUTH_HEADER)) {
-      return next.handle(req);
+      const headers = req.headers.delete(SKIP_AUTH_HEADER);
+      return next.handle(
+        req.clone({
+          headers
+        })
+      );
     }
     const token = this.authService.getTokenInStorage().access_token;
     const authRequest = req.clone({

@@ -4,16 +4,17 @@ import { Authentication } from 'src/app/models/authentication';
 import { tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { SKIP_AUTH_HEADER } from '../constants';
+import { environment } from './../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private tokenStoreKey = 'access_token';
-  private tokenStoreExpiration = 'access_token_expiration';
-  private authServer = 'http://localhost:8080';
-  private clientId = 'auth-server';
-  private clientSecret = 'auth-server-secret';
+  private readonly tokenStoreKey = 'access_token';
+  private readonly tokenStoreExpiration = 'access_token_expiration';
+  private authServer = environment.authServer;
+  private clientId = environment.clientId;
+  private clientSecret = environment.clientSecret;
   constructor(private http: HttpClient) {}
 
   authenticationApp(redirect_uri: string) {
