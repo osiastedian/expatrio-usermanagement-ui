@@ -10,13 +10,16 @@ import {
   AuthenticationState,
   AuthenticationReducer
 } from './authentication.reducer';
+import { UserReducer, UsersState } from './users.reducer';
 
 export interface AppState {
   authentication: AuthenticationState;
+  users: UsersState
 }
 
 export const reducers: ActionReducerMap<AppState> = {
-  authentication: AuthenticationReducer
+  authentication: AuthenticationReducer,
+  users: UserReducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

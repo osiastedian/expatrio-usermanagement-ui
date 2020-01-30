@@ -13,6 +13,10 @@ import { reducers, metaReducers } from './reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthenticationEffects } from './effects/authentication.effects';
 import { AuthenticationSelectors } from './selectors/authentication.selector';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ToastrModule } from 'ngx-toastr';
+import { UserEffects } from './effects/user.effects';
+import { UsersSelectors } from './selectors/users.selector';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,7 +33,9 @@ import { AuthenticationSelectors } from './selectors/authentication.selector';
         strictActionImmutability: true
       }
     }),
-    EffectsModule.forRoot([AuthenticationEffects])
+    EffectsModule.forRoot([AuthenticationEffects, UserEffects]),
+    ModalModule.forRoot(),
+    ToastrModule.forRoot()
   ],
   providers: [
     {
@@ -38,7 +44,8 @@ import { AuthenticationSelectors } from './selectors/authentication.selector';
       deps: [AuthenticationService],
       multi: true
     },
-    AuthenticationSelectors
+    AuthenticationSelectors,
+    UsersSelectors
   ],
   bootstrap: [AppComponent]
 })
