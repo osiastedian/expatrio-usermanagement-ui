@@ -14,7 +14,7 @@ import {
   Logout
 } from '../actions/authentication.actions';
 import { AuthenticationService } from '../core/services/authentication.service';
-import { tap, switchMap, map } from 'rxjs/operators';
+import { tap, switchMap, map, switchMapTo } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UserService } from '../apis/user.service';
 
@@ -31,11 +31,19 @@ export class AuthenticationEffects {
   @Effect() logoutEffect$: Observable<Action> = this.actions$.pipe(
     ofType(AuthenticationActionTypes.Logout),
     switchMap(() => {
-      this.authenticationService.logout();
-      return of(
-        new SetIsLoggedIn({ isLoggedIn: false }),
-        new SetAuthentication({ authentication: null })
-      );
+      return this.authenticationService
+        .logout()
+        .pipe(
+          switchMapTo(
+            of(
+              new SetIsLoggedIn({ isLoggedIn: false }),
+              new SetAuthentication({ authentication: null })
+            )
+          ),
+          tap(() => {
+            this.authenticationService.redirectToLogoutPage();
+          })
+        );
     })
   );
 

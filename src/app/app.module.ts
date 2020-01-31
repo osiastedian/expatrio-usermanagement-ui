@@ -17,6 +17,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
 import { UserEffects } from './effects/user.effects';
 import { UsersSelectors } from './selectors/users.selector';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -45,7 +46,8 @@ import { UsersSelectors } from './selectors/users.selector';
       multi: true
     },
     AuthenticationSelectors,
-    UsersSelectors
+    UsersSelectors,
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

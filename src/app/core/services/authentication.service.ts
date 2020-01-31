@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { SKIP_AUTH_HEADER } from '../constants';
 import { environment } from './../../../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthenticationService {
   private authServer = environment.authServer;
   private clientId = environment.clientId;
   private clientSecret = environment.clientSecret;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   authenticationApp(redirect_uri: string) {
     const grant_type = 'authorization_code';
@@ -26,17 +27,19 @@ export class AuthenticationService {
   }
 
   logout() {
-    localStorage.removeItem(this.tokenStoreKey);
-    localStorage.removeItem(this.tokenStoreExpiration);
-    this.deleteAllCookies();
+    const tokenUrl = `${this.authServer}/token/revoke`;
+    return this.http.delete(tokenUrl).pipe(
+      tap(() => {
+        localStorage.removeItem(this.tokenStoreKey);
+        localStorage.removeItem(this.tokenStoreExpiration);
+        this.cookieService.deleteAll();
+      })
+    );
   }
 
-  private deleteAllCookies() {
-    document.cookie.split(';').forEach(function(c) {
-      document.cookie = c
-        .replace(/^ +/, '')
-        .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
-    });
+  redirectToLogoutPage() {
+    const logoutUri = `${this.authServer}/logout`;
+    window.location.href = logoutUri;
   }
 
   fetchAccessToken(
