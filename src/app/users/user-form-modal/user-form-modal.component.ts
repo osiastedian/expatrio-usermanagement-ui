@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { User } from 'src/app/models';
+import { UserRole } from 'src/app/models/user-role.enum';
 
 @Component({
   selector: 'app-user-form-modal',
@@ -14,6 +15,21 @@ export class UserFormModalComponent implements OnInit {
   showPassword = false;
   success = false;
   user: User;
+
+  readonly rolesOptions = [
+    {
+      text: 'Admin',
+      value: UserRole.ADMIN
+    },
+    {
+      text: 'Customer',
+      value: UserRole.CUSTOMER
+    },
+    {
+      text: 'None',
+      value: UserRole.NO_ACCESS
+    }
+  ];
 
   constructor(public modalRef: BsModalRef) {}
 
@@ -29,7 +45,7 @@ export class UserFormModalComponent implements OnInit {
       lastName: '',
       password: '',
       userName: '',
-      role: null
+      role: UserRole.NO_ACCESS
     };
   }
 

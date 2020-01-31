@@ -7,6 +7,7 @@ import { AppState } from 'src/app/reducers';
 import { LoadPage, DeleteUser, EditUser } from 'src/app/actions/users.action';
 import { Observable } from 'rxjs';
 import { UsersSelectors } from 'src/app/selectors/users.selector';
+import { AuthenticationSelectors } from 'src/app/selectors/authentication.selector';
 
 @Component({
   selector: 'app-users-list',
@@ -19,10 +20,13 @@ export class UsersListComponent implements OnInit {
   currentPage = 0;
   pageSize = 10;
 
+  currentUser: Observable<User>;
+
   constructor(
     private modalService: BsModalService,
     private store: Store<AppState>,
-    private selectors: UsersSelectors
+    private selectors: UsersSelectors,
+    private authSelectors: AuthenticationSelectors
   ) {}
 
   ngOnInit() {
@@ -38,6 +42,7 @@ export class UsersListComponent implements OnInit {
     this.store.pipe(select(this.selectors.currentPage)).subscribe(page => {
       this.currentPage = page;
     });
+    this.currentUser = this.store.pipe(select(this.authSelectors.currentUser));
   }
 
   editUser(user: User) {
@@ -47,7 +52,10 @@ export class UsersListComponent implements OnInit {
     content.closeBtnName = 'Save';
     content.title = 'Update User';
     content.isNew = false;
-    this.modalService.onHidden.subscribe(data => {
+    this.modalService.onHidden.subscribe(() => {
+      if (!content.success) {
+        return;
+      }
       const updateUser = content.user;
       this.store.dispatch(new EditUser({ user: updateUser }));
     });

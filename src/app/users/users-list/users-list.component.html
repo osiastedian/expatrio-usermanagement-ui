@@ -5,6 +5,7 @@
       <th scope="col">First</th>
       <th scope="col">Last</th>
       <th scope="col">Username</th>
+      <th scope="col">Role</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
@@ -17,6 +18,7 @@
       <td>{{ user.firstName }}</td>
       <td>{{ user.lastName }}</td>
       <td>{{ user.userName }}</td>
+      <td>{{ user.role | titlecase }}</td>
       <td class="d-flex">
         <button
           (click)="editUser(user)"
@@ -25,6 +27,7 @@
           <i class="fa fa-edit"></i>
         </button>
         <button
+          [disabled] = "user.id === (currentUser | async).id"
           class="btn btn-sm rounded-circle btn-danger ml-2"
           [popover]="popTemplate"
           [popoverContext]="{

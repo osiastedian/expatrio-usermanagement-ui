@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { UsersListComponent } from './users-list/users-list.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { PopoverModule } from 'ngx-bootstrap/popover';
-import { ToastrModule } from 'ngx-toastr';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [UsersComponent, UserFormModalComponent, UsersListComponent],
@@ -20,7 +20,8 @@ import { ToastrModule } from 'ngx-toastr';
     ModalModule.forRoot(),
     FormsModule,
     PaginationModule.forRoot(),
-    PopoverModule.forRoot()
+    PopoverModule.forRoot(),
+    NgSelectModule
   ],
   entryComponents: [UserFormModalComponent]
 })

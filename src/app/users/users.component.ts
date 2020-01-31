@@ -26,6 +26,9 @@ export class UsersComponent implements OnInit {
 
     this.modalService.onHide.subscribe(() => {
       const content: UserFormModalComponent = modalRef.content;
+      if (!content.success) {
+        return;
+      }
       const { user } = content;
       this.store.dispatch(new AddUser({ user }));
     });
