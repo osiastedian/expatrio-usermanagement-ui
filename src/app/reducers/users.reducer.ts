@@ -1,7 +1,8 @@
 import {
   UserActions,
   UserActionType,
-  SetUserPage
+  SetUserPage,
+  ShowError
 } from '../actions/users.action';
 import { User } from '../models';
 
@@ -29,6 +30,12 @@ export function UserReducer(
       newState.totalPages = page.totalPages;
       newState.pageNumber = page.number;
       return newState;
+    }
+
+    case UserActionType.ShowError: {
+      const { error } = (action as ShowError).payload;
+      console.error('User Error', error);
+      break;
     }
   }
   return state;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType, act } from '@ngrx/effects';
-import { Observable, EMPTY } from 'rxjs';
+import { Observable, EMPTY, NEVER, of } from 'rxjs';
 import { Action, Store, select } from '@ngrx/store';
 import {
   UserActionType,
@@ -8,7 +8,8 @@ import {
   SetUserPage,
   AddUser,
   DeleteUser,
-  EditUser
+  EditUser,
+  ShowError
 } from '../actions/users.action';
 import {
   switchMap,
@@ -16,7 +17,9 @@ import {
   concatMap,
   concatMapTo,
   tap,
-  catchError
+  catchError,
+  switchMapTo,
+  withLatestFrom
 } from 'rxjs/operators';
 import { UserService } from '../apis/user.service';
 import { AppState } from '../reducers';
@@ -50,9 +53,9 @@ export class UserEffects {
         'Add User'
       );
     }),
-    concatMapTo(this.store.pipe(select(this.selectors.page))),
+    withLatestFrom(this.store.pipe(select(this.selectors.page))),
     map(
-      pageNumber =>
+      ([user, pageNumber]) =>
         new LoadPage({
           page: {
             pageNumber,
@@ -62,7 +65,7 @@ export class UserEffects {
     ),
     catchError((error: HttpErrorResponse) => {
       this.toastr.error(error.error['message'], 'Add User');
-      return EMPTY;
+      return of(new ShowError({ error }));
     })
   );
 
@@ -78,9 +81,9 @@ export class UserEffects {
         'Edit User'
       );
     }),
-    concatMapTo(this.store.pipe(select(this.selectors.page))),
+    withLatestFrom(this.store.pipe(select(this.selectors.page))),
     map(
-      pageNumber =>
+      ([user, pageNumber]) =>
         new LoadPage({
           page: {
             pageNumber,
@@ -90,7 +93,7 @@ export class UserEffects {
     ),
     catchError((error: HttpErrorResponse) => {
       this.toastr.error(error.error['message'], 'Update User');
-      return EMPTY;
+      return of(new ShowError({ error }));
     })
   );
 
@@ -107,9 +110,9 @@ export class UserEffects {
         'Delete User'
       );
     }),
-    concatMapTo(this.store.pipe(select(this.selectors.page))),
+    withLatestFrom(this.store.pipe(select(this.selectors.page))),
     map(
-      pageNumber =>
+      ([user, pageNumber]) =>
         new LoadPage({
           page: {
             pageNumber,
@@ -119,7 +122,7 @@ export class UserEffects {
     ),
     catchError((error: HttpErrorResponse) => {
       this.toastr.error(error.error['message'], 'Delete User');
-      return EMPTY;
+      return of(new ShowError({ error }));
     })
   );
 

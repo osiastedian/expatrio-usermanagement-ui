@@ -52,12 +52,13 @@ export class UsersListComponent implements OnInit {
     content.closeBtnName = 'Save';
     content.title = 'Update User';
     content.isNew = false;
-    this.modalService.onHidden.subscribe(() => {
+    const subscription = this.modalService.onHidden.subscribe(() => {
       if (!content.success) {
         return;
       }
       const updateUser = content.user;
       this.store.dispatch(new EditUser({ user: updateUser }));
+      subscription.unsubscribe();
     });
   }
 

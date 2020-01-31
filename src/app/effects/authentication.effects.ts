@@ -10,7 +10,8 @@ import {
   FetchCurrentUser,
   CheckAuthentication,
   SetCurrentUser,
-  SetAuthentication
+  SetAuthentication,
+  Logout
 } from '../actions/authentication.actions';
 import { AuthenticationService } from '../core/services/authentication.service';
 import { tap, switchMap, map } from 'rxjs/operators';
@@ -24,6 +25,17 @@ export class AuthenticationEffects {
     switchMap((action: Login) => {
       this.authenticationService.authenticationApp(action.payload.redirect_uri);
       return EMPTY;
+    })
+  );
+
+  @Effect() logoutEffect$: Observable<Action> = this.actions$.pipe(
+    ofType(AuthenticationActionTypes.Logout),
+    switchMap(() => {
+      this.authenticationService.logout();
+      return of(
+        new SetIsLoggedIn({ isLoggedIn: false }),
+        new SetAuthentication({ authentication: null })
+      );
     })
   );
 

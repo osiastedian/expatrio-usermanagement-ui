@@ -26,13 +26,17 @@ export class AuthenticationService {
   }
 
   logout() {
-    const logoutObs = of(true).pipe(
-      tap(() => {
-        localStorage.removeItem(this.tokenStoreKey);
-        localStorage.removeItem(this.tokenStoreExpiration);
-      })
-    );
-    return logoutObs;
+    localStorage.removeItem(this.tokenStoreKey);
+    localStorage.removeItem(this.tokenStoreExpiration);
+    this.deleteAllCookies();
+  }
+
+  private deleteAllCookies() {
+    document.cookie.split(';').forEach(function(c) {
+      document.cookie = c
+        .replace(/^ +/, '')
+        .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+    });
   }
 
   fetchAccessToken(

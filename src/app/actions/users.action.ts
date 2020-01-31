@@ -8,7 +8,8 @@ export const enum UserActionType {
   EditUser = '[Users] EditUser',
   DeleteUser = '[Users] DeleteUser',
   LoadPage = '[Users] LoadPage',
-  SetUserPage = '[Users] SetUsers'
+  SetUserPage = '[Users] SetUsers',
+  ShowError = '[Users] ShowError'
 }
 
 export class AddUser implements Action {
@@ -36,9 +37,14 @@ export class LoadPage implements Action {
   constructor(public payload: { page: Pageable }) {}
 }
 
+export class ShowError implements Action {
+  public type = UserActionType.ShowError;
+  constructor(public payload: { error: any }) {}
+}
+
 export type UserActions =
   | AddUser
   | EditUser
   | DeleteUser
   | SetUserPage
-  | LoadPage;
+  | LoadPage | ShowError;
